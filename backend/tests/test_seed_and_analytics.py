@@ -5,23 +5,10 @@ import pandas as pd
 import pytest
 from sqlalchemy import text
 
-from app.database.session import SessionLocal, engine
+from app.database.session import engine
 from app.services import analytics_service as A
 from app.services.sample_documents import generate_sample_documents
-from app.services.seed_data import generate_dataset, insert_dataset
-
-
-@pytest.fixture(scope="module")
-def dataset():
-    return generate_dataset(42)
-
-
-@pytest.fixture(scope="module")
-def seeded(client, dataset):
-    with SessionLocal() as db:
-        insert_dataset(db, dataset)
-    with engine.connect() as conn:
-        return A.load_frames(conn)
+from app.services.seed_data import generate_dataset
 
 
 def test_dataset_is_deterministic():

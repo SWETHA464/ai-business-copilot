@@ -419,7 +419,7 @@ def analyze_question(question: str, df: pd.DataFrame, customers: pd.DataFrame,
         result["metrics"] = {"monthly_revenue": rows}
         result["tables"].append(_table("Monthly revenue", rows))
         result["charts"].append(chart("line", "Monthly revenue", "month", [("revenue", "Revenue")], rows))
-    elif "quarter" in q:
+    elif any(w in q for w in ("quarterly", "by quarter", "per quarter", "each quarter", "qoq")):
         result["intent"] = "quarterly_revenue"
         rows = quarterly_revenue(df)
         result["metrics"] = {"quarterly_revenue": rows}
@@ -433,6 +433,12 @@ def analyze_question(question: str, df: pd.DataFrame, customers: pd.DataFrame,
         result["tables"].append(_table("Product performance" + (f" ({qtr})" if qtr else ""), rows))
         result["charts"].append(chart("bar", "Revenue by product" + (f" ({qtr})" if qtr else ""),
                                       "product", [("revenue", "Revenue")], rows[:10]))
+    elif "quarter" in q and "customer" not in q:
+        result["intent"] = "quarterly_revenue"
+        rows = quarterly_revenue(df)
+        result["metrics"] = {"quarterly_revenue": rows}
+        result["tables"].append(_table("Quarterly revenue", rows))
+        result["charts"].append(chart("bar", "Quarterly revenue", "quarter", [("revenue", "Revenue")], rows))
     elif "customer" in q:
         result["intent"] = "customers"
         ov = customer_overview(df, customers)

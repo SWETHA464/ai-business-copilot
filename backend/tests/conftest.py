@@ -58,3 +58,22 @@ def register_and_login(client, email="user@example.com", password="Passw0rdA", n
 @pytest.fixture()
 def auth_headers(client):
     return register_and_login(client)
+
+
+@pytest.fixture(scope="session")
+def dataset():
+    from app.services.seed_data import generate_dataset
+
+    return generate_dataset(42)
+
+
+@pytest.fixture(scope="session")
+def seeded(client, dataset):
+    """Business tables filled with the synthetic dataset; returns (sales, customers, payments) frames."""
+    from app.services import analytics_service as A
+    from app.services.seed_data import insert_dataset
+
+    with SessionLocal() as db:
+        insert_dataset(db, dataset)
+    with engine.connect() as conn:
+        return A.load_frames(conn)
