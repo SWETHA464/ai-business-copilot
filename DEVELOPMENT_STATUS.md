@@ -9,7 +9,8 @@ Last updated: 2026-11-05. Nothing below is marked done unless it was actually ru
 
 ## Completed
 - [x] Phase 1: folder scaffold, .gitignore, .env.example, this file
-- [~] Phase 2 in progress: config.py, database/session.py, models/models.py, utils/logging.py written (unverified)
+- [x] Verified by CI (run 41988919377): dependencies install on Python 3.12; config, DB session and ORM models import cleanly
+- [~] Phase 2 in progress: auth (security/auth.py, rate_limit.py, api/auth.py, schemas/auth.py), main.py, tests/conftest.py + test_auth.py written; CI result pending
 
 ## Remaining
 - [ ] Phase 2: backend core (config, models, auth, seed data, sample docs)
@@ -19,7 +20,6 @@ Last updated: 2026-11-05. Nothing below is marked done unless it was actually ru
 ## Known errors / unverified
 - Authoring sandbox cannot reach PyPI/npm (egress policy 403), so code cannot be installed or run there.
   Verification is done through GitHub Actions CI (.github/workflows/ci.yml); only what CI has run is marked verified.
-- Phase 2 files (config, DB session, ORM models) written but not yet confirmed by CI.
 
 ## Resume
 ```powershell
