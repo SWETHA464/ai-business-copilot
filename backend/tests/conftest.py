@@ -29,12 +29,11 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from app.database.session import Base, SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
+import app.models as _models  # noqa: E402,F401  (registers tables; keep module alias, don't shadow `app`)
 
 
 @pytest.fixture(scope="session")
 def client():
-    import app.models  # noqa: F401
-
     Base.metadata.create_all(engine)
     with TestClient(app) as c:
         yield c

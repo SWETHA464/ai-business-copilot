@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api import auth as auth_api
+from app import models as _models  # noqa: F401  (register tables)
 from app.config import get_settings
 from app.database.session import Base, engine
 from app.utils.logging import get_logger, setup_logging
@@ -24,8 +25,6 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     for w in settings.validate_for_runtime():
         log.warning(w)
-    import app.models  # noqa: F401  (register tables)
-
     Base.metadata.create_all(engine)
     log.info("application started env=%s", settings.app_env)
     yield
