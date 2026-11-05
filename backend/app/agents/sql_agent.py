@@ -60,7 +60,11 @@ def date_context(ref: date) -> dict:
     py, pq = _prev_quarter(y, q)
     prev = _quarter_bounds(py, pq)
     first_of_ref_month = ref.replace(day=1)
-    lm_end = first_of_ref_month - timedelta(days=1)
+    next_month_first = (first_of_ref_month + timedelta(days=32)).replace(day=1)
+    if ref >= next_month_first - timedelta(days=3):  # reference month is (practically) complete
+        lm_end = next_month_first - timedelta(days=1)
+    else:
+        lm_end = first_of_ref_month - timedelta(days=1)
     return {
         "reference_date": ref, "last_quarter": last, "last_quarter_label": f"{y}-Q{q}",
         "previous_quarter": prev, "previous_quarter_label": f"{py}-Q{pq}",

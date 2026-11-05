@@ -31,7 +31,15 @@ FORBIDDEN_FUNCTIONS = {
     "readfile", "writefile", "randomblob", "zeroblob", "fts3_tokenizer", "sqlite_compileoption_get",
     "sqlite_source_id", "sqlite_version", "version", "user", "current_user", "database", "schema",
     "system_user", "session_user", "connection_id", "get_lock", "release_lock", "into_outfile",
+    "current_version", "current_schema", "current_database", "current_catalog", "current_schemas",
 }
+# sqlglot may parse some of the above into dedicated node classes whose SQL name differs
+# (e.g. SQLITE_VERSION() -> CurrentVersion); block those classes as well as the names.
+_FORBIDDEN_FUNC_CLASS_NAMES = [
+    "CurrentVersion", "CurrentUser", "CurrentSchema", "CurrentCatalog", "CurrentDatabase",
+    "SessionUser", "SystemUser",
+]
+FORBIDDEN_FUNC_CLASSES = tuple(getattr(exp, n) for n in _FORBIDDEN_FUNC_CLASS_NAMES if hasattr(exp, n))
 
 _SET_OP = getattr(exp, "SetOperation", exp.Union)
 
@@ -96,7 +104,8 @@ def validate_and_prepare(sql: str, allowed_tables: dict[str, list[str]], dialect
                 f"Statements of type {type(node).__name__.upper()} are not allowed (read-only access).", "security")
 
     for f in root.find_all(exp.Func):
-        if _func_name(f) in FORBIDDEN_FUNCTIONS:
+        names = {_func_name(f), str(f.key).lower()}
+        if names & FORBIDDEN_FUNCTIONS or (FORBIDDEN_FUNC_CLASSES and isinstance(f, FORBIDDEN_FUNC_CLASSES)):
             raise SQLValidationError(f"Function {_func_name(f)}() is not allowed.", "security")
 
     if len(list(root.find_all(exp.Join))) > MAX_JOINS:
@@ -107,12 +116,15 @@ def validate_and_prepare(sql: str, allowed_tables: dict[str, list[str]], dialect
     select_aliases = {a.alias.lower() for a in root.find_all(exp.Alias) if a.alias}
 
     alias_to_table: dict[str, str] = {}
+    cte_refs: set[str] = set()  # names/aliases under which a CTE is referenced in FROM/JOIN
     base_tables: list[str] = []
     for t in root.find_all(exp.Table):
         name = (t.name or "").lower()
         if t.db or t.catalog:
             raise SQLValidationError("Schema-qualified table names are not allowed.", "security")
         if name in cte_names:
+            cte_refs.add(name)
+            cte_refs.add((t.alias or t.name).lower())
             continue
         if name not in allowed:
             raise SQLValidationError(
@@ -134,7 +146,7 @@ def validate_and_prepare(sql: str, allowed_tables: dict[str, list[str]], dialect
         if qualifier:
             table = alias_to_table.get(qualifier)
             if table is None:
-                if qualifier in cte_names or qualifier in subquery_aliases:
+                if qualifier in cte_names or qualifier in cte_refs or qualifier in subquery_aliases:
                     continue
                 raise SQLValidationError(f"Unknown table or alias '{qualifier}'.", "syntax")
             if cname not in allowed[table]:
