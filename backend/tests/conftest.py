@@ -77,3 +77,20 @@ def seeded(client, dataset):
         insert_dataset(db, dataset)
     with engine.connect() as conn:
         return A.load_frames(conn)
+
+
+@pytest.fixture(scope="session")
+def admin_headers(client):
+    from sqlalchemy import select
+
+    from app.models import User
+    from app.security.auth import hash_password
+
+    with SessionLocal() as db:
+        if not db.scalar(select(User).where(User.email == "admin-test@example.com")):
+            db.add(User(email="admin-test@example.com", full_name="Admin", role="admin",
+                        hashed_password=hash_password("AdminPass1")))
+            db.commit()
+    r = client.post("/api/auth/login", json={"email": "admin-test@example.com", "password": "AdminPass1"})
+    assert r.status_code == 200, r.text
+    return {"Authorization": f"Bearer {r.json()['access_token']}"}

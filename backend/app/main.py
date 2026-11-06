@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api import auth as auth_api
+from app.api import documents as documents_api
 from app import models as _models  # noqa: F401  (register tables)
 from app.config import get_settings
 from app.database.session import Base, engine
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
         return response
 
     app.include_router(auth_api.router)
+    app.include_router(documents_api.router)
     return app
 
 

@@ -49,6 +49,9 @@ class Settings(BaseSettings):
     retrieval_candidates: int = 30
     rrf_k: int = 60
     min_relevance_score: float = 0.0
+    n_query_variants: int = 3
+    context_char_budget: int = 6000
+    min_evidence_coverage: float = 0.34  # fraction of query terms that must appear in the best chunk
 
     max_upload_mb: int = 15
     upload_dir: str = str(DATA_DIR / "uploads")
