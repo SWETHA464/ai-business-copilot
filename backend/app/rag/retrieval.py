@@ -6,6 +6,7 @@ Access control: only chunks from `allowed_docs` can ever be returned (the filter
 """
 from __future__ import annotations
 
+import math
 import time
 from dataclasses import dataclass, field, replace
 
@@ -217,8 +218,13 @@ def retrieve(db: Session, query: str, user: User, *, config: RetrievalConfig | N
     qtoks = set(tokenize(query))
     best_cov = max((_coverage(qtoks, h.text) for h in hits), default=0.0)
     result.coverage = round(best_cov, 3)
+    # Evidence gate: a fraction of query terms must appear in one passage, but long multi-part questions only need
+    # an absolute minimum (<= 3 terms), and any multi-term question needs at least 2 matching terms.
+    n = len(qtoks)
+    needed = min(max(2 if n >= 2 else 1, math.ceil(cfg.min_evidence_coverage * n)), 3) if n else 1
+    best_matched = max((len(qtoks & set(tokenize(h.text))) for h in hits), default=0)
     semantic_ok = reranker.name != "lexical" and hits and hits[0].rerank_score >= 0.5
-    result.sufficient = bool(hits) and (best_cov >= cfg.min_evidence_coverage or semantic_ok)
+    result.sufficient = bool(hits) and (best_matched >= needed or semantic_ok)
     result.reason = "" if result.sufficient else "The documents do not appear to contain information about this."
 
     per_chunk = max(300, cfg.context_char_budget // max(len(hits), 1))

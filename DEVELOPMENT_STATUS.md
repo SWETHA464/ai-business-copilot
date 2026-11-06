@@ -1,25 +1,27 @@
 # Development Status
 
-Last updated: 2026-11-05. Nothing below is marked done unless it was actually run.
+Last updated: 2026-11-06. Nothing is marked done unless it was actually run (by GitHub Actions CI; the authoring
+sandbox cannot reach PyPI/npm, so CI is the verifier).
 
-## Context
-- Repo started empty on 2026-11-05 (an earlier 2-day effort was never pushed, so it could not be recovered).
-- Policy: commit + push to `main` after every phase so progress lives in GitHub, not in a session workspace.
-- Dev environment of the sandbox: Python 3.13, Node 22. User machine: Windows, no Docker.
+## Completed and CI-verified (backend, 125+ tests)
+- [x] Config, DB session (main + read-only engine), ORM models, auth (Argon2 + JWT), rate limiting
+- [x] Synthetic dataset generator, sample documents (PDF/DOCX/TXT/CSV) consistent with the data, analytics (pandas)
+- [x] SQL guard (sqlglot) + SQL agent (LLM optional, template fallback), analytics service
+- [x] RAG: extraction/validation, chunking, embeddings (sentence-transformers or hash fallback), FAISS + BM25,
+      RRF hybrid retrieval, query rewriting, rerank (cross-encoder or lexical fallback), compression, citations
+- [x] Document service + API (upload/list/get/search/patch/replace/reindex/delete, ACL, duplicates, rebuild index)
+- [x] LangGraph orchestrator, routing, external research agent (Tavily, optional), verification node
+- [x] Chat API (conversations, follow-ups), analytics/dashboard API, system health/status API
+- [x] Report generation + PDF download
 
-## Completed
-- [x] Phase 1: folder scaffold, .gitignore, .env.example, this file
-- [x] Verified by CI (run 41988919377): dependencies install on Python 3.12; config, DB session and ORM models import cleanly
-- [~] Phase 2 in progress: auth (security/auth.py, rate_limit.py, api/auth.py, schemas/auth.py), main.py, tests/conftest.py + test_auth.py written; CI result pending
+## In progress / remaining
+- [ ] Frontend (React/Vite/Tailwind): all pages + CI build
+- [ ] Evaluation (Ragas script, questions.json), docs/, full README
+- [ ] Optional: response streaming (not implemented), Redis (not implemented)
 
-## Remaining
-- [ ] Phase 2: backend core (config, models, auth, seed data, sample docs)
-- [ ] Phase 3: RAG, SQL agent, analytics, LangGraph, research, reports
-- [ ] Phase 4: frontend, tests, evaluation, docs, README
-
-## Known errors / unverified
-- Authoring sandbox cannot reach PyPI/npm (egress policy 403), so code cannot be installed or run there.
-  Verification is done through GitHub Actions CI (.github/workflows/ci.yml); only what CI has run is marked verified.
+## Known limitations
+- Authoring sandbox cannot install packages or run the app; real LLM (Ollama), sentence-transformers/cross-encoder,
+  MySQL and Tavily were never exercised here. Tests use LLM_PROVIDER=none, hash embeddings, lexical reranker, SQLite.
 
 ## Resume
 ```powershell

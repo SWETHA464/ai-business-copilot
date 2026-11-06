@@ -87,7 +87,7 @@ def condense_question(question: str, history: list[dict], llm=None) -> str:
     prior_users = [m["content"] for m in history if m.get("role") == "user"]
     if not prior_users:
         return question
-    short = len(tokenize(question)) <= 8
+    short = len(question.split()) <= 6
     if not (short or _FOLLOW_UP.search(question)):
         return question
     if llm is not None and llm.configured():
