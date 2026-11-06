@@ -11,11 +11,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api import auth as auth_api
+from app.api import analytics as analytics_api
+from app.api import chat as chat_api
 from app.api import documents as documents_api
+from app.api import reports as reports_api
+from app.api import system as system_api
 from app import models as _models  # noqa: F401  (register tables)
 from app.config import get_settings
 from app.database.session import Base, engine
 from app.utils.logging import get_logger, setup_logging
+from app.utils.tracing import configure_tracing
 
 log = get_logger("main")
 
@@ -27,6 +32,7 @@ async def lifespan(app: FastAPI):
     for w in settings.validate_for_runtime():
         log.warning(w)
     Base.metadata.create_all(engine)
+    configure_tracing()
     log.info("application started env=%s", settings.app_env)
     yield
 
@@ -64,6 +70,10 @@ def create_app() -> FastAPI:
 
     app.include_router(auth_api.router)
     app.include_router(documents_api.router)
+    app.include_router(chat_api.router)
+    app.include_router(analytics_api.router)
+    app.include_router(reports_api.router)
+    app.include_router(system_api.router)
     return app
 
 

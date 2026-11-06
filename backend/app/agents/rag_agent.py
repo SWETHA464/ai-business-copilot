@@ -33,18 +33,31 @@ def _citation(n: int, hit) -> dict:
             "category": hit.category, "snippet": snippet, "score": round(hit.score, 3)}
 
 
+QUANT_CUES = re.compile(r"\b(how (long|many|much|often|soon)|when|what (is|was|are) the (rate|amount|limit|window|"
+                        r"threshold|percentage|number|total|deadline))\b", re.I)
+
+
 def extractive_answer(question: str, retrieval: RetrievalResult, max_sentences: int = 3) -> tuple[str, list[int]]:
+    """Pick the best distinct, informative sentences. Title-like fragments and duplicates across near-identical
+    documents are skipped; numeric sentences are favoured for quantitative questions."""
     qt = set(tokenize(question))
+    quant = bool(QUANT_CUES.search(question)) or "window" in qt
+    seen: set[str] = set()
     cands = []
     for n, hit in enumerate(retrieval.hits[:MAX_SOURCES], start=1):
         clean, _ = neutralize(hit.text)
-        for i, s in enumerate(sentences(clean)):
-            if len(s) < 25:
+        for i, sent in enumerate(sentences(clean)):
+            key = " ".join(tokenize(sent))
+            if len(sent) < 40 or key in seen:
                 continue
-            ov = len(qt & set(tokenize(s)))
-            cands.append((ov, -n, -i, s, n))
+            seen.add(key)
+            ov = len(qt & set(tokenize(sent)))
+            if ov == 0:
+                continue
+            bonus = 0.75 if quant and any(ch.isdigit() for ch in sent) else 0.0
+            cands.append((ov + bonus, -n, -i, sent, n))
     cands.sort(reverse=True)
-    picked = [c for c in cands if c[0] > 0][:max_sentences]
+    picked = cands[:max_sentences]
     if not picked:
         return "", []
     picked.sort(key=lambda c: (c[4], -c[2]))
