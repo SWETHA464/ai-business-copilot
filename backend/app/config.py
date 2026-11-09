@@ -66,7 +66,6 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 60
     login_rate_limit_per_minute: int = 10
 
-    @property
     @field_validator("database_url", "readonly_database_url")
     @classmethod
     def _anchor_sqlite_path(cls, v: str | None) -> str | None:
@@ -78,6 +77,7 @@ class Settings(BaseSettings):
                 return f"sqlite:///{(REPO_ROOT / raw).resolve().as_posix()}"
         return v
 
+    @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
