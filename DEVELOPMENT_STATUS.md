@@ -15,7 +15,8 @@ sandbox cannot reach PyPI/npm, so CI is the verifier).
 - [x] Report generation + PDF download
 
 ## In progress / remaining
-- [ ] Frontend (React/Vite/Tailwind): all pages + CI build
+- [~] Frontend (React/Vite/Tailwind): committed so far = Login, Register, Dashboard, Chat, layout, charts, API client, auth context.
+      NOT yet written: Documents, Analytics, Reports, History, Settings pages; frontend CI build never run/verified
 - [ ] Evaluation (Ragas script, questions.json), docs/, full README
 - [ ] Optional: response streaming (not implemented), Redis (not implemented)
 
