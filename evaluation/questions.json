@@ -1,0 +1,206 @@
+{
+  "description": "Questions about the generated sample documents. key_facts are verbatim phrases from static (non-computed) document text; unanswerable questions should make retrieval report insufficient evidence.",
+  "questions": [
+    {
+      "id": "refund-window",
+      "question": "How many days after delivery can a customer request a refund?",
+      "ground_truth": "Customers may request a refund within 30 days of delivery.",
+      "key_facts": [
+        "30 days of delivery"
+      ],
+      "expected_sources": [
+        "Company_Refund_Policy.pdf"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "refund-electronics",
+      "question": "What applies to opened electronics that are not defective?",
+      "ground_truth": "Opened non-defective electronics may be returned within 14 days and are subject to a 10% restocking fee.",
+      "key_facts": [
+        "14 days",
+        "10% restocking fee"
+      ],
+      "expected_sources": [
+        "Company_Refund_Policy.pdf",
+        "Customer_Support_Guidelines.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "refund-processing",
+      "question": "How long does it take for an approved refund to be issued?",
+      "ground_truth": "Approved refunds are issued to the original payment method within 7 business days.",
+      "key_facts": [
+        "7 business days",
+        "original payment method"
+      ],
+      "expected_sources": [
+        "Company_Refund_Policy.pdf"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "refund-nonrefundable",
+      "question": "Which items cannot be refunded?",
+      "ground_truth": "Gift cards and items marked final sale cannot be refunded.",
+      "key_facts": [
+        "Gift cards",
+        "final sale"
+      ],
+      "expected_sources": [
+        "Company_Refund_Policy.pdf"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "support-first-response",
+      "question": "What is the first response target for customer support?",
+      "ground_truth": "First response within 4 business hours.",
+      "key_facts": [
+        "4 business hours"
+      ],
+      "expected_sources": [
+        "Customer_Support_Guidelines.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "support-escalation",
+      "question": "When must a refund be escalated to a team lead?",
+      "ground_truth": "Level 2 escalation to the team lead applies to refunds above $500 or repeated complaints.",
+      "key_facts": [
+        "team lead",
+        "$500"
+      ],
+      "expected_sources": [
+        "Customer_Support_Guidelines.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "q3-decline-reason",
+      "question": "Why did revenue decline in Q3 2026 according to our internal reports?",
+      "ground_truth": "The Q3 decline is concentrated in Wireless Earbuds Pro (lost demand after the spring promotion and competitor price cuts) and Smart Home Hub (supply shortages from August onward).",
+      "key_facts": [
+        "Wireless Earbuds Pro",
+        "Smart Home Hub",
+        "supply shortages"
+      ],
+      "expected_sources": [
+        "Q3_2026_Sales_Report.docx",
+        "Product_Performance_Report.pdf"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "q2-drivers",
+      "question": "What drove growth in Q2 2026?",
+      "ground_truth": "A spring promotion (10% discount, 28 April to 12 May 2026) drove volumes; Wireless Earbuds Pro and Smart Home Hub were the main contributors.",
+      "key_facts": [
+        "spring promotion",
+        "10% discount",
+        "Wireless Earbuds Pro"
+      ],
+      "expected_sources": [
+        "Q2_2026_Sales_Report.docx",
+        "Marketing_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "q1-promotion",
+      "question": "Did we run a company-wide promotion in Q1 2026?",
+      "ground_truth": "No company-wide promotion ran in Q1 2026.",
+      "key_facts": [
+        "No company-wide promotion"
+      ],
+      "expected_sources": [
+        "Q1_2026_Sales_Report.docx",
+        "Marketing_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "blackfriday",
+      "question": "What discount was offered during Black Friday week?",
+      "ground_truth": "A 15% discount on all products from 24 to 30 November 2025.",
+      "key_facts": [
+        "15% discount",
+        "24-30 November"
+      ],
+      "expected_sources": [
+        "Marketing_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "hub-advertising",
+      "question": "What should marketing do about Smart Home Hub advertising?",
+      "ground_truth": "Pause paid advertising for Smart Home Hub until stock is replenished to avoid cancellations.",
+      "key_facts": [
+        "Pause paid advertising",
+        "Smart Home Hub"
+      ],
+      "expected_sources": [
+        "Marketing_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "retention-atrisk",
+      "question": "What is the win-back tactic for at-risk customers?",
+      "ground_truth": "A win-back email with a time-limited 10% offer before they reach 90 days; at risk means 46-90 days since last order.",
+      "key_facts": [
+        "10% offer",
+        "46-90 days"
+      ],
+      "expected_sources": [
+        "Customer_Retention_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "retention-targets",
+      "question": "What are the churn reduction targets?",
+      "ground_truth": "Reduce the churn rate by 5 percentage points over the next two quarters.",
+      "key_facts": [
+        "5 percentage points",
+        "two quarters"
+      ],
+      "expected_sources": [
+        "Customer_Retention_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "hub-customers",
+      "question": "Which customers are at higher churn risk because of supply issues?",
+      "ground_truth": "Customers affected by Smart Home Hub cancellations in August and September 2026.",
+      "key_facts": [
+        "Smart Home Hub",
+        "August and September 2026"
+      ],
+      "expected_sources": [
+        "Customer_Retention_Strategy.txt"
+      ],
+      "type": "answerable"
+    },
+    {
+      "id": "unanswerable-leave",
+      "question": "What is our parental leave policy?",
+      "ground_truth": "The documents do not contain this information.",
+      "key_facts": [],
+      "expected_sources": [],
+      "type": "unanswerable"
+    },
+    {
+      "id": "unanswerable-ceo",
+      "question": "What is the CEO's salary?",
+      "ground_truth": "The documents do not contain this information.",
+      "key_facts": [],
+      "expected_sources": [],
+      "type": "unanswerable"
+    }
+  ]
+}

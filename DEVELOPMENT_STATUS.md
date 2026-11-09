@@ -15,9 +15,8 @@ sandbox cannot reach PyPI/npm, so CI is the verifier).
 - [x] Report generation + PDF download
 
 ## In progress / remaining
-- [~] Frontend (React/Vite/Tailwind): committed so far = Login, Register, Dashboard, Chat, layout, charts, API client, auth context.
-      NOT yet written: Documents, Analytics, Reports, History, Settings pages; frontend CI build never run/verified
-- [ ] Evaluation (Ragas script, questions.json), docs/, full README
+- [~] Frontend: all 9 pages written (Login, Register, Dashboard, Chat, Documents, Analytics, History, Reports, Settings). Build NOT yet verified: first run is the new CI `frontend` job.
+- [x] Evaluation harness (questions.json, evaluate_rag.py, test_evaluation.py), docs/*.md, full README written. No evaluation scores recorded yet (needs a real run).
 - [ ] Optional: response streaming (not implemented), Redis (not implemented)
 
 ## Known limitations
