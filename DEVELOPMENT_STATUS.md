@@ -1,6 +1,6 @@
 # Development Status
 
-Last updated: 2026-11-06. Nothing is marked done unless it was actually run (by GitHub Actions CI; the authoring
+Last updated: 2026-11-09. CI (backend pytest + frontend build) green at 31264d7. Nothing is marked done unless it was actually run (by GitHub Actions CI; the authoring
 sandbox cannot reach PyPI/npm, so CI is the verifier).
 
 ## Completed and CI-verified (backend, 125+ tests)
@@ -15,7 +15,7 @@ sandbox cannot reach PyPI/npm, so CI is the verifier).
 - [x] Report generation + PDF download
 
 ## In progress / remaining
-- [~] Frontend: all 9 pages written (Login, Register, Dashboard, Chat, Documents, Analytics, History, Reports, Settings). Build NOT yet verified: first run is the new CI `frontend` job.
+- [x] Frontend: all 9 pages written; `npm run build` passes in CI (commit 31264d7). Not yet checked in a real browser against a running backend.
 - [x] Evaluation harness (questions.json, evaluate_rag.py, test_evaluation.py), docs/*.md, full README written. No evaluation scores recorded yet (needs a real run).
 - [ ] Optional: response streaming (not implemented), Redis (not implemented)
 
@@ -29,3 +29,8 @@ git clone https://github.com/SWETHA464/ai-business-copilot
 cd ai-business-copilot
 # then ask Claude to "continue from DEVELOPMENT_STATUS.md"
 ```
+
+## Next tasks
+1. Run the app locally end to end (backend + frontend + Ollama) and fix integration issues.
+2. Run `python evaluation/evaluate_rag.py` with real embeddings and record results.
+3. Optional: streaming responses, Redis.
