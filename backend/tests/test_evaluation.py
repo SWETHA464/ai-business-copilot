@@ -43,3 +43,12 @@ def test_scoring_and_aggregation():
     assert ok["abstain_ok"] is True
     agg = ev.aggregate([r, miss, ok])
     assert agg["hit_at_k"] == 0.5 and agg["abstain_accuracy"] == 1.0
+
+
+def test_relative_sqlite_path_is_anchored_to_repo_root():
+    from app.config import REPO_ROOT, Settings
+
+    s = Settings(database_url="sqlite:///./data/app.db")
+    assert s.database_url == f"sqlite:///{(REPO_ROOT / 'data' / 'app.db').resolve().as_posix()}"
+    absolute = Settings(database_url="sqlite:////tmp/x.db")
+    assert absolute.database_url == "sqlite:////tmp/x.db"

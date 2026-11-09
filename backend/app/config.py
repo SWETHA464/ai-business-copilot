@@ -4,7 +4,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -67,6 +67,17 @@ class Settings(BaseSettings):
     login_rate_limit_per_minute: int = 10
 
     @property
+    @field_validator("database_url", "readonly_database_url")
+    @classmethod
+    def _anchor_sqlite_path(cls, v: str | None) -> str | None:
+        """Resolve relative SQLite paths against the repo root so scripts and the server share one file
+        no matter which directory they are started from."""
+        if v and v.startswith("sqlite:///") and not v.startswith("sqlite:////") and ":memory:" not in v:
+            raw = v[len("sqlite:///"):]
+            if not (len(raw) > 1 and raw[1] == ":"):  # Windows absolute path like C:/...
+                return f"sqlite:///{(REPO_ROOT / raw).resolve().as_posix()}"
+        return v
+
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
